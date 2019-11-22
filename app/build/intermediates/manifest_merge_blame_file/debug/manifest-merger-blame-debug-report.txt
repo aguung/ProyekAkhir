@@ -1,0 +1,152 @@
+1<?xml version="1.0" encoding="utf-8"?>
+2<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+3    package="com.agungsubastian.proyekakhir"
+4    android:versionCode="1"
+5    android:versionName="1.0" >
+6
+7    <uses-sdk
+8        android:minSdkVersion="17"
+8-->D:\Project\ProyekAkhir\app\src\main\AndroidManifest.xml
+9        android:targetSdkVersion="29" />
+9-->D:\Project\ProyekAkhir\app\src\main\AndroidManifest.xml
+10
+11    <uses-permission android:name="android.permission.INTERNET" />
+11-->D:\Project\ProyekAkhir\app\src\main\AndroidManifest.xml:6:5-67
+11-->D:\Project\ProyekAkhir\app\src\main\AndroidManifest.xml:6:22-64
+12    <uses-permission android:name="android.permission.VIBRATE" />
+12-->D:\Project\ProyekAkhir\app\src\main\AndroidManifest.xml:7:5-66
+12-->D:\Project\ProyekAkhir\app\src\main\AndroidManifest.xml:7:22-63
+13    <uses-permission android:name="android.permission.WAKE_LOCK" />
+13-->D:\Project\ProyekAkhir\app\src\main\AndroidManifest.xml:8:5-68
+13-->D:\Project\ProyekAkhir\app\src\main\AndroidManifest.xml:8:22-65
+14
+15    <permission
+15-->D:\Project\ProyekAkhir\app\src\main\AndroidManifest.xml:10:5-12:44
+16        android:name="com.agungsubastian.proyekakhir.READ_DATABASE"
+16-->D:\Project\ProyekAkhir\app\src\main\AndroidManifest.xml:11:9-68
+17        android:protectionLevel="normal" />
+17-->D:\Project\ProyekAkhir\app\src\main\AndroidManifest.xml:12:9-41
+18    <permission
+18-->D:\Project\ProyekAkhir\app\src\main\AndroidManifest.xml:13:5-15:44
+19        android:name="com.agungsubastian.proyekakhir.WRITE_DATABASE"
+19-->D:\Project\ProyekAkhir\app\src\main\AndroidManifest.xml:14:9-69
+20        android:protectionLevel="normal" />
+20-->D:\Project\ProyekAkhir\app\src\main\AndroidManifest.xml:15:9-41
+21
+22    <application
+22-->D:\Project\ProyekAkhir\app\src\main\AndroidManifest.xml:17:5-71:19
+23        android:allowBackup="true"
+23-->D:\Project\ProyekAkhir\app\src\main\AndroidManifest.xml:18:9-35
+24        android:appComponentFactory="androidx.core.app.CoreComponentFactory"
+24-->[androidx.core:core:1.1.0] C:\Users\agung\.gradle\caches\transforms-2\files-2.1\f01b27bb220ecb79298884ef36a7a2fb\core-1.1.0\AndroidManifest.xml:24:18-86
+25        android:debuggable="true"
+26        android:icon="@mipmap/ic_launcher"
+26-->D:\Project\ProyekAkhir\app\src\main\AndroidManifest.xml:19:9-43
+27        android:label="@string/app_name"
+27-->D:\Project\ProyekAkhir\app\src\main\AndroidManifest.xml:20:9-41
+28        android:roundIcon="@mipmap/ic_launcher_round"
+28-->D:\Project\ProyekAkhir\app\src\main\AndroidManifest.xml:21:9-54
+29        android:supportsRtl="true"
+29-->D:\Project\ProyekAkhir\app\src\main\AndroidManifest.xml:22:9-35
+30        android:testOnly="true"
+31        android:theme="@style/AppTheme" >
+31-->D:\Project\ProyekAkhir\app\src\main\AndroidManifest.xml:23:9-40
+32        <receiver android:name="com.agungsubastian.proyekakhir.widget.MovieWidget" >
+32-->D:\Project\ProyekAkhir\app\src\main\AndroidManifest.xml:25:9-33:20
+32-->D:\Project\ProyekAkhir\app\src\main\AndroidManifest.xml:25:19-53
+33            <intent-filter>
+33-->D:\Project\ProyekAkhir\app\src\main\AndroidManifest.xml:26:13-28:29
+34                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+34-->D:\Project\ProyekAkhir\app\src\main\AndroidManifest.xml:27:17-84
+34-->D:\Project\ProyekAkhir\app\src\main\AndroidManifest.xml:27:25-81
+35            </intent-filter>
+36
+37            <meta-data
+37-->D:\Project\ProyekAkhir\app\src\main\AndroidManifest.xml:30:13-32:61
+38                android:name="android.appwidget.provider"
+38-->D:\Project\ProyekAkhir\app\src\main\AndroidManifest.xml:31:17-58
+39                android:resource="@xml/movie_widget_info" />
+39-->D:\Project\ProyekAkhir\app\src\main\AndroidManifest.xml:32:17-58
+40        </receiver>
+41
+42        <service
+42-->D:\Project\ProyekAkhir\app\src\main\AndroidManifest.xml:34:9-36:71
+43            android:name="com.agungsubastian.proyekakhir.widget.MovieWidgetService"
+43-->D:\Project\ProyekAkhir\app\src\main\AndroidManifest.xml:35:13-54
+44            android:permission="android.permission.BIND_REMOTEVIEWS" />
+44-->D:\Project\ProyekAkhir\app\src\main\AndroidManifest.xml:36:13-69
+45
+46        <provider
+46-->D:\Project\ProyekAkhir\app\src\main\AndroidManifest.xml:37:9-42:87
+47            android:name="com.agungsubastian.proyekakhir.database.FavoriteProvider"
+47-->D:\Project\ProyekAkhir\app\src\main\AndroidManifest.xml:38:13-54
+48            android:authorities="com.agungsubastian.proyekakhir.database"
+48-->D:\Project\ProyekAkhir\app\src\main\AndroidManifest.xml:39:13-74
+49            android:exported="true"
+49-->D:\Project\ProyekAkhir\app\src\main\AndroidManifest.xml:40:13-36
+50            android:readPermission="com.agungsubastian.proyekakhir.READ_DATABASE"
+50-->D:\Project\ProyekAkhir\app\src\main\AndroidManifest.xml:41:13-82
+51            android:writePermission="com.agungsubastian.proyekakhir.WRITE_DATABASE" />
+51-->D:\Project\ProyekAkhir\app\src\main\AndroidManifest.xml:42:13-84
+52
+53        <receiver
+53-->D:\Project\ProyekAkhir\app\src\main\AndroidManifest.xml:43:9-46:40
+54            android:name="com.agungsubastian.proyekakhir.notification.MovieDailyReceiver"
+54-->D:\Project\ProyekAkhir\app\src\main\AndroidManifest.xml:44:13-60
+55            android:enabled="true"
+55-->D:\Project\ProyekAkhir\app\src\main\AndroidManifest.xml:45:13-35
+56            android:exported="false" />
+56-->D:\Project\ProyekAkhir\app\src\main\AndroidManifest.xml:46:13-37
+57        <receiver
+57-->D:\Project\ProyekAkhir\app\src\main\AndroidManifest.xml:47:9-50:40
+58            android:name="com.agungsubastian.proyekakhir.notification.MovieUpcomingReceiver"
+58-->D:\Project\ProyekAkhir\app\src\main\AndroidManifest.xml:48:13-63
+59            android:enabled="true"
+59-->D:\Project\ProyekAkhir\app\src\main\AndroidManifest.xml:49:13-35
+60            android:exported="false" />
+60-->D:\Project\ProyekAkhir\app\src\main\AndroidManifest.xml:50:13-37
+61
+62        <activity
+62-->D:\Project\ProyekAkhir\app\src\main\AndroidManifest.xml:51:9-53:63
+63            android:name="com.agungsubastian.proyekakhir.SettingsActivity"
+63-->D:\Project\ProyekAkhir\app\src\main\AndroidManifest.xml:52:13-45
+64            android:label="@string/title_activity_settings" />
+64-->D:\Project\ProyekAkhir\app\src\main\AndroidManifest.xml:53:13-60
+65        <activity
+65-->D:\Project\ProyekAkhir\app\src\main\AndroidManifest.xml:54:9-56:59
+66            android:name="com.agungsubastian.proyekakhir.DetailFavoriteActivity"
+66-->D:\Project\ProyekAkhir\app\src\main\AndroidManifest.xml:55:13-51
+67            android:theme="@style/AppTheme.NoActionBar" />
+67-->D:\Project\ProyekAkhir\app\src\main\AndroidManifest.xml:56:13-56
+68        <activity
+68-->D:\Project\ProyekAkhir\app\src\main\AndroidManifest.xml:57:9-59:59
+69            android:name="com.agungsubastian.proyekakhir.DetailTVActivity"
+69-->D:\Project\ProyekAkhir\app\src\main\AndroidManifest.xml:58:13-45
+70            android:theme="@style/AppTheme.NoActionBar" />
+70-->D:\Project\ProyekAkhir\app\src\main\AndroidManifest.xml:59:13-56
+71        <activity
+71-->D:\Project\ProyekAkhir\app\src\main\AndroidManifest.xml:60:9-62:59
+72            android:name="com.agungsubastian.proyekakhir.DetailMovieActivity"
+72-->D:\Project\ProyekAkhir\app\src\main\AndroidManifest.xml:61:13-48
+73            android:theme="@style/AppTheme.NoActionBar" />
+73-->D:\Project\ProyekAkhir\app\src\main\AndroidManifest.xml:62:13-56
+74        <activity android:name="com.agungsubastian.proyekakhir.MainActivity" >
+74-->D:\Project\ProyekAkhir\app\src\main\AndroidManifest.xml:63:9-70:20
+74-->D:\Project\ProyekAkhir\app\src\main\AndroidManifest.xml:63:19-47
+75            <intent-filter>
+75-->D:\Project\ProyekAkhir\app\src\main\AndroidManifest.xml:64:13-69:29
+76                <action android:name="android.intent.action.MAIN" />
+76-->D:\Project\ProyekAkhir\app\src\main\AndroidManifest.xml:65:17-69
+76-->D:\Project\ProyekAkhir\app\src\main\AndroidManifest.xml:65:25-66
+77                <action android:name="android.intent.action.VIEW" />
+77-->D:\Project\ProyekAkhir\app\src\main\AndroidManifest.xml:66:17-69
+77-->D:\Project\ProyekAkhir\app\src\main\AndroidManifest.xml:66:25-66
+78
+79                <category android:name="android.intent.category.LAUNCHER" />
+79-->D:\Project\ProyekAkhir\app\src\main\AndroidManifest.xml:68:17-77
+79-->D:\Project\ProyekAkhir\app\src\main\AndroidManifest.xml:68:27-74
+80            </intent-filter>
+81        </activity>
+82    </application>
+83
+84</manifest>

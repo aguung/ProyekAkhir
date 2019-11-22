@@ -1,0 +1,32 @@
+<resources>
+    <string name="app_name">Final Project</string>
+    <string name="search">Search</string>
+    <string name="favorite">Favorite</string>
+    <string name="movies">Movies</string>
+    <string name="tv_shows">TV Shows</string>
+    <string name="settings">Settings</string>
+    <string name="change">Change into search</string>
+    <string name="todo">TODO</string>
+    <string name="title">Title</string>
+    <string name="show_date">Show Date</string>
+    <string name="score">Score</string>
+    <string name="description">Description</string>
+    <string name="detail">Details</string>
+    <string name="time_out">Connection time out</string>
+    <string name="no_connection">You are not connected to the network</string>
+    <string name="error_load">Error Load Data!!</string>
+    <string name="add">This add to favorite</string>
+    <string name="remove">This remove from favorite</string>
+    <string name="message_daily">Let\'s watch some good movies for this day</string>
+    <string name="release_today_msg">%s Release today, don\'t forget to watch it!</string>
+    <string name="title_activity_settings">Settings</string>
+    <string name="pref_title_notifications">Notifications</string>
+    <string name="key_today_reminder">key_today_reminder</string>
+    <string name="daily_reminder">Daily Reminder</string>
+    <string name="summary_daily_reminder">You will reveiced daily reminder every 7 AM</string>
+    <string name="key_release_reminder">key_release_reminder</string>
+    <string name="summary_release_reminder">You will receive daily movie release info every 8 AM</string>
+    <string name="release_reminder">Release Reminder</string>
+    <string name="appwidget_text">MOVIE BANNER</string>
+    <string name="no_item">NO DATA</string>
+</resources>

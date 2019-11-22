@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.agungsubastian.proyekakhir"
+    android:versionCode="1"
+    android:versionName="1.0" >
+
+    <uses-sdk
+        android:minSdkVersion="17"
+        android:targetSdkVersion="29" />
+
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.VIBRATE" />
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
+
+    <permission
+        android:name="com.agungsubastian.proyekakhir.READ_DATABASE"
+        android:protectionLevel="normal" />
+    <permission
+        android:name="com.agungsubastian.proyekakhir.WRITE_DATABASE"
+        android:protectionLevel="normal" />
+
+    <application
+        android:allowBackup="true"
+        android:appComponentFactory="androidx.core.app.CoreComponentFactory"
+        android:debuggable="true"
+        android:icon="@mipmap/ic_launcher"
+        android:label="@string/app_name"
+        android:roundIcon="@mipmap/ic_launcher_round"
+        android:supportsRtl="true"
+        android:testOnly="true"
+        android:theme="@style/AppTheme" >
+        <receiver android:name="com.agungsubastian.proyekakhir.widget.MovieWidget" >
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+            </intent-filter>
+
+            <meta-data
+                android:name="android.appwidget.provider"
+                android:resource="@xml/movie_widget_info" />
+        </receiver>
+
+        <service
+            android:name="com.agungsubastian.proyekakhir.widget.MovieWidgetService"
+            android:permission="android.permission.BIND_REMOTEVIEWS" />
+
+        <provider
+            android:name="com.agungsubastian.proyekakhir.database.FavoriteProvider"
+            android:authorities="com.agungsubastian.proyekakhir.database"
+            android:exported="true"
+            android:readPermission="com.agungsubastian.proyekakhir.READ_DATABASE"
+            android:writePermission="com.agungsubastian.proyekakhir.WRITE_DATABASE" />
+
+        <receiver
+            android:name="com.agungsubastian.proyekakhir.notification.MovieDailyReceiver"
+            android:enabled="true"
+            android:exported="false" />
+        <receiver
+            android:name="com.agungsubastian.proyekakhir.notification.MovieUpcomingReceiver"
+            android:enabled="true"
+            android:exported="false" />
+
+        <activity
+            android:name="com.agungsubastian.proyekakhir.SettingsActivity"
+            android:label="@string/title_activity_settings" />
+        <activity
+            android:name="com.agungsubastian.proyekakhir.DetailFavoriteActivity"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name="com.agungsubastian.proyekakhir.DetailTVActivity"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name="com.agungsubastian.proyekakhir.DetailMovieActivity"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity android:name="com.agungsubastian.proyekakhir.MainActivity" >
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+    </application>
+
+</manifest>
