@@ -6,7 +6,7 @@ import android.provider.BaseColumns;
 public class DatabaseContract {
 
     static String TABLE_FAVORITE = "FAVORITE";
-    public static final String AUTHORITY = "com.agungsubastian.proyekakhir.database";
+    static final String AUTHORITY = "com.agungsubastian.proyekakhir.database";
     private static final String SCHEME = "content";
 
     public static class FavoriteColumns implements BaseColumns {

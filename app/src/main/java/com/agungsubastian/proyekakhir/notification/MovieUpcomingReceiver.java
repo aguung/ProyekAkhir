@@ -11,32 +11,37 @@ import android.graphics.Color;
 import android.media.RingtoneManager;
 import android.net.Uri;
 import android.os.Build;
+import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.core.app.NotificationCompat;
 import androidx.core.content.ContextCompat;
 
 import com.agungsubastian.proyekakhir.DetailMovieActivity;
 import com.agungsubastian.proyekakhir.R;
+import com.agungsubastian.proyekakhir.helper.ApiClient;
+import com.agungsubastian.proyekakhir.model.MoviesModel;
 import com.agungsubastian.proyekakhir.model.ResultItemMovies;
 
+import java.net.SocketTimeoutException;
+import java.net.UnknownHostException;
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
+import java.util.Locale;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class MovieUpcomingReceiver extends BroadcastReceiver {
     private static int notifId = 1000;
+    private ApiClient apiClient = new ApiClient();
 
     @Override
     public void onReceive(Context context, Intent intent) {
-        String movieTitle = intent.getStringExtra("movietitle");
-        int id = intent.getIntExtra("id", 0);
-        int movieId = intent.getIntExtra("movieid", 0);
-        String poster = intent.getStringExtra("movieposter");
-        String date = intent.getStringExtra("moviedate");
-        float rate = intent.getFloatExtra("movierating", 0);
-        String ovr = intent.getStringExtra("movieover");
-        ResultItemMovies movieResult = new ResultItemMovies(poster,movieId,movieTitle,rate,ovr,date);
-        String desc = String.format(context.getString(R.string.release_today_msg), movieTitle);
-        sendNotification(context, context.getString(R.string.app_name), desc, id, movieResult);
+        setReleaseAlarm(context);
     }
 
     private void sendNotification(Context context, String title, String desc, int id, ResultItemMovies movieResult) {
@@ -76,43 +81,27 @@ public class MovieUpcomingReceiver extends BroadcastReceiver {
         notificationManager.notify(id, builder.build());
     }
 
-    public void setAlarm(Context context, List<ResultItemMovies> movieResults) {
-        int delay = 0;
+    public void setAlarm(Context context) {
+        cancelAlarm(context);
+        AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
 
-        for (ResultItemMovies movie : movieResults) {
-            cancelAlarm(context);
-            AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
-            Intent intent = new Intent(context, MovieUpcomingReceiver.class);
-            intent.putExtra("movietitle", movie.getOriginalTitle());
-            intent.putExtra("movieid", movie.getId());
-            intent.putExtra("movieposter", movie.getPosterPath());
-            intent.putExtra("moviedate", movie.getReleaseDate());
-            intent.putExtra("movierating", movie.getVoteAverage());
-            intent.putExtra("movieover", movie.getOverview());
-            intent.putExtra("id", notifId);
-            PendingIntent pendingIntent = PendingIntent.getBroadcast(context,
-                    100, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+        Calendar calendar = Calendar.getInstance();
+        calendar.set(Calendar.HOUR_OF_DAY, 8);
+        calendar.set(Calendar.MINUTE, 0);
+        calendar.set(Calendar.SECOND, 0);
 
-            Calendar calendar = Calendar.getInstance();
-            calendar.set(Calendar.HOUR_OF_DAY, 8);
-            calendar.set(Calendar.MINUTE, 0);
-            calendar.set(Calendar.SECOND, 0);
-
-            if(Build.VERSION.SDK_INT > Build.VERSION_CODES.KITKAT && Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
-                assert alarmManager != null;
-                alarmManager.setInexactRepeating(
-                        AlarmManager.RTC_WAKEUP,
-                        calendar.getTimeInMillis() + delay,
-                        AlarmManager.INTERVAL_DAY,
-                        pendingIntent
-                );
-            } else if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                assert alarmManager != null;
-                alarmManager.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP,
-                        calendar.getTimeInMillis() + delay, pendingIntent);
-            }
-            notifId += 1;
-            delay += 3000;
+        if(Build.VERSION.SDK_INT > Build.VERSION_CODES.KITKAT && Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
+            assert alarmManager != null;
+            alarmManager.setInexactRepeating(
+                    AlarmManager.RTC_WAKEUP,
+                    calendar.getTimeInMillis(),
+                    AlarmManager.INTERVAL_DAY,
+                    getPendingIntent(context)
+            );
+        } else if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            assert alarmManager != null;
+            alarmManager.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP,
+                    calendar.getTimeInMillis(), getPendingIntent(context));
         }
     }
     public void cancelAlarm(Context context) {
@@ -126,4 +115,44 @@ public class MovieUpcomingReceiver extends BroadcastReceiver {
                 PendingIntent.FLAG_UPDATE_CURRENT);
     }
 
+    private void setReleaseAlarm(final Context context){
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
+        Date date = new Date();
+        String now = dateFormat.format(date);
+        Call<MoviesModel> apiCall = apiClient.getService().getReleaseToday(now,now);
+        apiCall.enqueue(new Callback<MoviesModel>() {
+            @Override
+            public void onResponse(@NonNull Call<MoviesModel> call, @NonNull Response<MoviesModel> response) {
+                System.out.println(response);
+                if (response.isSuccessful()) {
+                    assert response.body() != null;
+                    List<ResultItemMovies> movieResults;
+                    movieResults = response.body().getResults();
+                    for(ResultItemMovies movie : movieResults){
+                        String poster = movie.getPosterPath();
+                        int movieId = movie.getId();
+                        String movieTitle = movie.getOriginalTitle();
+                        float rate = movie.getVoteAverage();
+                        String ovr = movie.getOverview();
+                        String date = movie.getReleaseDate();
+                        ResultItemMovies movieResult = new ResultItemMovies(poster,movieId,movieTitle,rate,ovr,date);
+                        String desc = String.format(context.getString(R.string.release_today_msg), movieTitle);
+                        sendNotification(context, context.getString(R.string.app_name), desc, notifId, movieResult);
+                        notifId++;
+                    }
+                } else {
+                    Toast.makeText(context, R.string.error_load, Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onFailure(@NonNull Call<MoviesModel> call, @NonNull Throwable t) {
+                if (t instanceof SocketTimeoutException) {
+                    Toast.makeText(context, R.string.time_out, Toast.LENGTH_SHORT).show();
+                } else if (t instanceof UnknownHostException) {
+                    Toast.makeText(context, R.string.no_connection, Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+    }
 }

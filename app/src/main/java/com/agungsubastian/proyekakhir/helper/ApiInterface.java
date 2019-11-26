@@ -17,4 +17,10 @@ public interface ApiInterface {
 
     @GET("discover/movie")
     Call<MoviesModel> getReleaseToday(@Query("primary_release_date.gte") String date1, @Query("primary_release_date.lte") String date2);
+
+    @GET("discover/movie")
+    Call<MoviesModel> getMovies();
+
+    @GET("discover/tv")
+    Call<TVModel> getTV();
 }

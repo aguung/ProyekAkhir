@@ -1321,6 +1321,8 @@ id right_icon
 id right_side
 id rv_data
 id rv_favorite
+id rv_movie
+id rv_tv
 id save_image_matrix
 id save_non_transition_alpha
 id save_scale_type
@@ -1502,7 +1504,9 @@ layout design_navigation_menu_item
 layout design_text_input_password_icon
 layout expand_button
 layout fragment_favorite
+layout fragment_movie
 layout fragment_search
+layout fragment_tv
 layout image_frame
 layout item_rv
 layout movie_widget

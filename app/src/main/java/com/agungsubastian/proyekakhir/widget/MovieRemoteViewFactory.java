@@ -42,6 +42,7 @@ public class MovieRemoteViewFactory implements RemoteViewsService.RemoteViewsFac
 
     @Override
     public void onCreate() {
+        final long identityToken = Binder.clearCallingIdentity();
         cursor = mContext.getContentResolver().query(
                 DatabaseContract.CONTENT_URI,
                 null,
@@ -49,7 +50,7 @@ public class MovieRemoteViewFactory implements RemoteViewsService.RemoteViewsFac
                 null,
                 null
         );
-
+        Binder.restoreCallingIdentity(identityToken);
     }
 
     @Override

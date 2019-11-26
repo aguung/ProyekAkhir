@@ -1,0 +1,12 @@
+<resources>
+    <string name="app_name">Favorite Movie</string>
+    <string name="todo">TODO</string>
+    <string name="title">Title</string>
+    <string name="show_date">Show Date</string>
+    <string name="score">Score</string>
+    <string name="description">Description</string>
+    <string name="detail">Details</string>
+    <string name="remove">This remove from favorite</string>
+    <string name="add">This add to favorite</string>
+    <string name="empty">Database favorite is empty</string>
+</resources>

@@ -1,14 +1,14 @@
 package com.agungsubastian.proyekakhir.database;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.RequiresApi;
-
 import android.content.ContentProvider;
 import android.content.ContentValues;
 import android.content.UriMatcher;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Build;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.RequiresApi;
 
 import java.util.Objects;
 
@@ -101,5 +101,10 @@ public class FavoriteProvider extends ContentProvider {
         }
         Objects.requireNonNull(getContext()).getContentResolver().notifyChange(CONTENT_URI, null);
         return updated;
+    }
+
+    @Override
+    public void shutdown() {
+        super.shutdown();
     }
 }

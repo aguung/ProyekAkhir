@@ -92,4 +92,12 @@ public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.MoviesHold
     public interface OnItemClickCallback {
         void onItemClicked(ResultItemMovies item);
     }
+
+    public List<ResultItemMovies> getList(){
+        return listGetMovies;
+    }
+
+    public void setMovieResult(List<ResultItemMovies> movieResult){
+        this.listGetMovies = movieResult;
+    }
 }

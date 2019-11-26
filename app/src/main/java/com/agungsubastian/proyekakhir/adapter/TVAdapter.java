@@ -92,4 +92,12 @@ public class TVAdapter extends RecyclerView.Adapter<TVAdapter.TVHolder> {
     public interface OnItemClickCallback {
         void onItemClicked(ResultItemTV item);
     }
+
+    public List<ResultItemTV> getList(){
+        return listGetTV;
+    }
+
+    public void setTVResult(List<ResultItemTV> tvResult){
+        this.listGetTV = tvResult;
+    }
 }

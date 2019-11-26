@@ -2,9 +2,7 @@ package com.agungsubastian.proyekakhir;
 
 import android.os.Build;
 import android.os.Bundle;
-import android.widget.Toast;
 
-import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
@@ -12,21 +10,10 @@ import androidx.preference.Preference;
 import androidx.preference.PreferenceFragmentCompat;
 import androidx.preference.SwitchPreferenceCompat;
 
-import com.agungsubastian.proyekakhir.helper.ApiClient;
-import com.agungsubastian.proyekakhir.model.MoviesModel;
 import com.agungsubastian.proyekakhir.notification.MovieDailyReceiver;
 import com.agungsubastian.proyekakhir.notification.MovieUpcomingReceiver;
 
-import java.net.SocketTimeoutException;
-import java.net.UnknownHostException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.Locale;
 import java.util.Objects;
-
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 
 public class SettingsActivity extends AppCompatActivity {
 
@@ -47,7 +34,6 @@ public class SettingsActivity extends AppCompatActivity {
     public static class SettingsFragment extends PreferenceFragmentCompat implements Preference.OnPreferenceChangeListener {
         private MovieDailyReceiver movieDailyReceiver = new MovieDailyReceiver();
         private MovieUpcomingReceiver movieUpcomingReceiver = new MovieUpcomingReceiver();
-        private ApiClient apiClient = new ApiClient();
 
         @Override
         public void onCreatePreferences(Bundle savedInstanceState, String rootKey) {
@@ -76,40 +62,12 @@ public class SettingsActivity extends AppCompatActivity {
                 }
             }else{
                 if(b){
-                    setReleaseAlarm();
+                    movieUpcomingReceiver.setAlarm(getActivity());
                 }else{
                     movieUpcomingReceiver.cancelAlarm(Objects.requireNonNull(getActivity()));
                 }
             }
             return true;
-        }
-
-        private void setReleaseAlarm(){
-            SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
-            Date date = new Date();
-            String now = dateFormat.format(date);
-            Call<MoviesModel> apiCall = apiClient.getService().getReleaseToday(now,now);
-            apiCall.enqueue(new Callback<MoviesModel>() {
-                @Override
-                public void onResponse(@NonNull Call<MoviesModel> call, @NonNull Response<MoviesModel> response) {
-                    System.out.println(response);
-                    if (response.isSuccessful()) {
-                        assert response.body() != null;
-                        movieUpcomingReceiver.setAlarm(getActivity(), response.body().getResults());
-                    } else {
-                        Toast.makeText(getContext(), R.string.error_load, Toast.LENGTH_SHORT).show();
-                    }
-                }
-
-                @Override
-                public void onFailure(@NonNull Call<MoviesModel> call, @NonNull Throwable t) {
-                    if (t instanceof SocketTimeoutException) {
-                        Toast.makeText(getContext(), R.string.time_out, Toast.LENGTH_SHORT).show();
-                    } else if (t instanceof UnknownHostException) {
-                        Toast.makeText(getContext(), R.string.no_connection, Toast.LENGTH_SHORT).show();
-                    }
-                }
-            });
         }
     }
 }

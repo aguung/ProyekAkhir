@@ -66,6 +66,13 @@ public class FavoriteAdapter extends RecyclerView.Adapter<FavoriteAdapter.Favori
             txtDate = itemView.findViewById(R.id.txt_date);
             txtDescription = itemView.findViewById(R.id.txt_description);
             imgData = itemView.findViewById(R.id.img_photo);
+
+            itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    onItemClickCallback.onItemClicked(listGetFavoriteModel.get(getAdapterPosition()));
+                }
+            });
         }
 
         void bind(final FavoriteModel item) {
@@ -79,17 +86,18 @@ public class FavoriteAdapter extends RecyclerView.Adapter<FavoriteAdapter.Favori
                     .centerInside()
                     .diskCacheStrategy(DiskCacheStrategy.NONE)
                     .into(imgData);
-
-            itemView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    onItemClickCallback.onItemClicked(listGetFavoriteModel.get(getAdapterPosition()));
-                }
-            });
         }
     }
 
     public interface OnItemClickCallback {
         void onItemClicked(FavoriteModel data);
+    }
+
+    public List<FavoriteModel> getList(){
+        return listGetFavoriteModel;
+    }
+
+    public void setTVResult(List<FavoriteModel> tvResult){
+        this.listGetFavoriteModel = tvResult;
     }
 }

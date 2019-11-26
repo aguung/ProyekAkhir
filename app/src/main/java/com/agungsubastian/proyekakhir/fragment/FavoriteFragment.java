@@ -9,18 +9,18 @@ import android.database.Cursor;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
-
-import androidx.annotation.RequiresApi;
-import androidx.fragment.app.Fragment;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-
 import android.os.Handler;
 import android.os.HandlerThread;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ProgressBar;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.RequiresApi;
+import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.agungsubastian.proyekakhir.DetailFavoriteActivity;
 import com.agungsubastian.proyekakhir.R;
@@ -41,10 +41,8 @@ public class FavoriteFragment extends Fragment {
     private ProgressBar progressBar;
     private FavoriteAdapter adapter;
     private RecyclerView rv_favorite;
-    private loadDataAsync loadData;
 
-    public FavoriteFragment() {
-    }
+    public FavoriteFragment() {}
 
 
     @RequiresApi(api = Build.VERSION_CODES.KITKAT)
@@ -55,6 +53,7 @@ public class FavoriteFragment extends Fragment {
         progressBar = view.findViewById(R.id.progressBar);
         rv_favorite = view.findViewById(R.id.rv_favorite);
         setupList();
+
         showLoading();
 
         HandlerThread handlerThread = new HandlerThread("DataObserver");
@@ -62,11 +61,21 @@ public class FavoriteFragment extends Fragment {
         Handler handler = new Handler(handlerThread.getLooper());
         DataObserver myObserver = new DataObserver(handler, getContext());
         Objects.requireNonNull(getContext()).getContentResolver().registerContentObserver(CONTENT_URI, true, myObserver);
-
-        loadData = new loadDataAsync();
-        loadData.execute();
-
+        if (savedInstanceState == null) {
+            new loadDataAsync().execute();
+        } else {
+            ArrayList<FavoriteModel> list;
+            list = savedInstanceState.getParcelableArrayList("favorite");
+            adapter.setTVResult(list);
+            rv_favorite.setAdapter(adapter);
+        }
         return view;
+    }
+
+    @Override
+    public void onSaveInstanceState(@NonNull Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putParcelableArrayList("favorite", new ArrayList<>(adapter.getList()));
     }
 
     private void setupList() {
@@ -130,8 +139,7 @@ public class FavoriteFragment extends Fragment {
         @Override
         public void onChange(boolean selfChange) {
             super.onChange(selfChange);
-            loadData = new loadDataAsync();
-            loadData.execute();
+            new loadDataAsync().execute();
         }
     }
 

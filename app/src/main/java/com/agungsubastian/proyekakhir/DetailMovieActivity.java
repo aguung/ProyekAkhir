@@ -1,9 +1,5 @@
 package com.agungsubastian.proyekakhir;
 
-import androidx.annotation.RequiresApi;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
-
 import android.content.ContentValues;
 import android.database.Cursor;
 import android.net.Uri;
@@ -13,6 +9,10 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import androidx.annotation.RequiresApi;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 
 import com.agungsubastian.proyekakhir.database.DatabaseContract;
 import com.agungsubastian.proyekakhir.database.FavoriteHelper;
@@ -121,16 +121,19 @@ public class DetailMovieActivity extends AppCompatActivity {
         cv.put(DatabaseContract.FavoriteColumns.SCORE, item.getVoteAverage());
         cv.put(DatabaseContract.FavoriteColumns.IMAGE, item.getPosterPath());
 
-        getContentResolver().insert(CONTENT_URI, cv);
+        Uri data  = getContentResolver().insert(CONTENT_URI, cv);
+        System.out.println("Uri insert "+data);
+
         Toast.makeText(this, R.string.add, Toast.LENGTH_SHORT).show();
     }
 
     private void FavoriteRemove() {
-        getContentResolver().delete(
+        int delete = getContentResolver().delete(
                 Uri.parse(CONTENT_URI + "/" + item.getId()),
                 null,
                 null
         );
+        System.out.println("INT DELETE "+delete);
         Toast.makeText(this, R.string.remove, Toast.LENGTH_SHORT).show();
     }
 }
