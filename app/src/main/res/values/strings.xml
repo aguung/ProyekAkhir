@@ -11,7 +11,6 @@
     <string name="show_date">Show Date</string>
     <string name="score">Score</string>
     <string name="description">Description</string>
-    <string name="detail">Details</string>
     <string name="time_out">Connection time out</string>
     <string name="no_connection">You are not connected to the network</string>
     <string name="error_load">Error Load Data!!</string>
