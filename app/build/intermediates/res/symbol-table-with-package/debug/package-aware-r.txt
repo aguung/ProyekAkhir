@@ -1007,7 +1007,6 @@ dimen tooltip_precise_anchor_threshold
 dimen tooltip_vertical_padding
 dimen tooltip_y_offset_non_touch
 dimen tooltip_y_offset_touch
-dimen widget_margin
 drawable abc_ab_share_pack_mtrl_alpha
 drawable abc_action_bar_item_background_material
 drawable abc_btn_borderless_material
@@ -1120,7 +1119,6 @@ drawable ic_movie
 drawable ic_mtrl_chip_checked_black
 drawable ic_mtrl_chip_checked_circle
 drawable ic_mtrl_chip_close_circle
-drawable ic_search
 drawable ic_settings_applications
 drawable ic_tv
 drawable ic_unfavorite
@@ -1208,7 +1206,6 @@ id always
 id app_bar
 id async
 id auto
-id banner_text
 id barrier
 id beginning
 id blocking
@@ -1312,6 +1309,7 @@ id parent_matrix
 id percent
 id pin
 id progressBar
+id progress_bar
 id progress_circular
 id progress_horizontal
 id radio
@@ -1402,7 +1400,6 @@ id title
 id titleDividerNoCustom
 id title_template
 id toolbar
-id toolbar_layout
 id top
 id topPanel
 id touch_outside
@@ -1508,6 +1505,7 @@ layout fragment_movie
 layout fragment_search
 layout fragment_tv
 layout image_frame
+layout item_progress
 layout item_rv
 layout movie_widget
 layout movie_widget_item
@@ -1590,7 +1588,6 @@ string character_counter_pattern
 string copy
 string daily_reminder
 string description
-string detail
 string error_load
 string expand_button_title
 string fab_transformation_scrim_behavior

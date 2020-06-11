@@ -4,6 +4,12 @@ package com.agungsubastian.proyekakhir.fragment;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.ProgressBar;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
@@ -12,26 +18,21 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.ProgressBar;
-import android.widget.Toast;
-
-import com.agungsubastian.proyekakhir.adapter.MoviesAdapter;
-import com.agungsubastian.proyekakhir.adapter.TVAdapter;
 import com.agungsubastian.proyekakhir.DetailMovieActivity;
 import com.agungsubastian.proyekakhir.DetailTVActivity;
-import com.agungsubastian.proyekakhir.helper.ApiClient;
 import com.agungsubastian.proyekakhir.MainActivity;
+import com.agungsubastian.proyekakhir.R;
+import com.agungsubastian.proyekakhir.adapter.MoviesAdapter;
+import com.agungsubastian.proyekakhir.adapter.TVAdapter;
+import com.agungsubastian.proyekakhir.helper.ApiClient;
 import com.agungsubastian.proyekakhir.model.MoviesModel;
 import com.agungsubastian.proyekakhir.model.ResultItemMovies;
 import com.agungsubastian.proyekakhir.model.ResultItemTV;
 import com.agungsubastian.proyekakhir.model.TVModel;
-import com.agungsubastian.proyekakhir.R;
 
 import java.net.SocketTimeoutException;
 import java.net.UnknownHostException;
+import java.util.List;
 import java.util.Objects;
 
 import retrofit2.Call;
@@ -48,8 +49,10 @@ public class SearchFragment extends Fragment {
     private ProgressBar progressBar;
     private MoviesAdapter adapterMovie;
     private TVAdapter adapterTV;
+    private List<ResultItemMovies> itemMovies;
     private ApiClient apiClient = new ApiClient();
     private SearchView searchView;
+    private int item_per_display = 6;
     public SearchFragment() {}
 
     @Override
@@ -102,8 +105,8 @@ public class SearchFragment extends Fragment {
                 hideLoading();
                 if (response.isSuccessful()) {
                     assert response.body() != null;
+                    itemMovies = response.body().getResults();
                     setMovies();
-                    adapterMovie.replaceAll(response.body().getResults());
                 } else {
                     Toast.makeText(getContext(), R.string.error_load, Toast.LENGTH_SHORT).show();
                 }
@@ -154,7 +157,7 @@ public class SearchFragment extends Fragment {
     }
 
     private void setMovies(){
-        adapterMovie = new MoviesAdapter();
+        adapterMovie = new MoviesAdapter(item_per_display);
         rv_data.setLayoutManager(new LinearLayoutManager(getContext()));
         rv_data.setAdapter(adapterMovie);
         adapterMovie.setOnItemClickCallback(new MoviesAdapter.OnItemClickCallback() {
@@ -166,6 +169,12 @@ public class SearchFragment extends Fragment {
                 Intent intent = new Intent(getContext(), DetailMovieActivity.class);
                 intent.putExtra(DetailMovieActivity.EXTRA_DATA, item);
                 startActivity(intent);
+            }
+        });
+        adapterMovie.setOnLoadMoreListener(new MoviesAdapter.OnLoadMoreListener() {
+            @Override
+            public void onLoadMore(int current_page) {
+                loadNextDataMovies(current_page);
             }
         });
     }
@@ -185,5 +194,25 @@ public class SearchFragment extends Fragment {
                 startActivity(intent);
             }
         });
+    }
+
+    private List<ResultItemMovies> generateListItemMovies(int count,int page) {
+        int first = page == 0 ? 0 : item_per_display * page;
+        return itemMovies.subList(first, count);
+    }
+
+    private void loadNextDataMovies(final int current_page) {
+        int max = item_per_display*(current_page+1);
+        if(max <= itemMovies.size()){
+            adapterMovie.setLoading();
+            new Handler().postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    adapterMovie.insertData(generateListItemMovies(item_per_display,current_page));
+                }
+            }, 1500);
+        }else {
+            Toast.makeText(getContext(), "Data Habis", Toast.LENGTH_SHORT).show();
+        }
     }
 }

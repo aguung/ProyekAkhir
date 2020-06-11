@@ -3,6 +3,8 @@ package com.agungsubastian.proyekakhir.fragment;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -24,6 +26,7 @@ import com.agungsubastian.proyekakhir.model.ResultItemMovies;
 import java.net.SocketTimeoutException;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
+import java.util.List;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -36,9 +39,12 @@ public class MovieFragment extends Fragment {
 
     private ProgressBar progressBar;
     private MoviesAdapter adapter;
+    private List<ResultItemMovies> itemMovies;
+    private int item_per_display = 6;
     private ApiClient apiClient = new ApiClient();
 
-    public MovieFragment() {}
+    public MovieFragment() {
+    }
 
 
     @Override
@@ -48,16 +54,16 @@ public class MovieFragment extends Fragment {
         progressBar = view.findViewById(R.id.progressBar);
         RecyclerView rv_movies = view.findViewById(R.id.rv_movie);
 
-        adapter = new MoviesAdapter();
+        adapter = new MoviesAdapter(item_per_display);
         rv_movies.setLayoutManager(new LinearLayoutManager(view.getContext()));
         rv_movies.setAdapter(adapter);
 
-        if(savedInstanceState != null){
+        if (savedInstanceState != null) {
             ArrayList<ResultItemMovies> list;
             list = savedInstanceState.getParcelableArrayList("movies");
             adapter.setMovieResult(list);
             rv_movies.setAdapter(adapter);
-        }else{
+        } else {
             getDataMovie();
         }
         adapter.setOnItemClickCallback(new MoviesAdapter.OnItemClickCallback() {
@@ -66,6 +72,13 @@ public class MovieFragment extends Fragment {
                 Intent intent = new Intent(getContext(), DetailMovieActivity.class);
                 intent.putExtra(DetailMovieActivity.EXTRA_DATA, item);
                 startActivity(intent);
+            }
+        });
+        adapter.setOnLoadMoreListener(new MoviesAdapter.OnLoadMoreListener() {
+            @Override
+            public void onLoadMore(int current_page) {
+                Log.e("MOVIE", " " + current_page);
+                loadNextDataMovies(current_page);
             }
         });
         return view;
@@ -77,7 +90,7 @@ public class MovieFragment extends Fragment {
         outState.putParcelableArrayList("movies", new ArrayList<>(adapter.getList()));
     }
 
-    private void getDataMovie(){
+    private void getDataMovie() {
         showLoading();
         Call<MoviesModel> apiCall = apiClient.getService().getMovies();
         apiCall.enqueue(new Callback<MoviesModel>() {
@@ -87,7 +100,8 @@ public class MovieFragment extends Fragment {
                 System.out.println(response);
                 if (response.isSuccessful()) {
                     assert response.body() != null;
-                    adapter.replaceAll(response.body().getResults());
+                    itemMovies = response.body().getResults();
+                    adapter.insertData(generateListItemMovies(item_per_display, 0));
                 } else {
                     Toast.makeText(getContext(), R.string.error_load, Toast.LENGTH_SHORT).show();
                 }
@@ -103,10 +117,30 @@ public class MovieFragment extends Fragment {
             }
         });
     }
-    private void showLoading(){
+
+    private void showLoading() {
         progressBar.setVisibility(View.VISIBLE);
     }
-    private void hideLoading(){
+
+    private void hideLoading() {
         progressBar.setVisibility(View.GONE);
+    }
+
+    private List<ResultItemMovies> generateListItemMovies(int count, int page) {
+        int first = page == 0 ? 0 : count * page;
+        return itemMovies.subList(first, count + first);
+    }
+
+    private void loadNextDataMovies(final int current_page) {
+        int max = item_per_display * (current_page + 1);
+        if (max <= itemMovies.size()) {
+            adapter.setLoading();
+            new Handler().postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    adapter.insertData(generateListItemMovies(item_per_display, current_page));
+                }
+            }, 1500);
+        }
     }
 }
